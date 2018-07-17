@@ -89,6 +89,7 @@ public class TopBean {
     public class Song{
         @SerializedName("singer")
         private List<Singer> listSinger;
+        @SerializedName("f")
         private String f;
         @SerializedName("songname")
         private String musicName;
@@ -99,9 +100,17 @@ public class TopBean {
         @SerializedName("songmid")
         private String mid;
         private String lyricSrc;
-
+        private String pic;
         public List<Singer> getListSinger() {
             return listSinger;
+        }
+
+        public String getPic() {
+            return pic;
+        }
+
+        public void setPic(String pic) {
+            this.pic = pic;
         }
 
         public void setListSinger(List<Singer> listSinger) {

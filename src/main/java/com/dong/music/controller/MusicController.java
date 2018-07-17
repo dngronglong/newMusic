@@ -1,6 +1,7 @@
 package com.dong.music.controller;
 
 import com.dong.music.beans.MusicBean;
+import com.dong.music.beans.MusicHQ;
 import com.dong.music.utils.GetUrl;
 import org.springframework.web.bind.annotation.*;
 
@@ -48,6 +49,13 @@ public class MusicController {
         Map map=new HashMap();
         map.put("random",GetUrl.random());
         return map;
+    }
+    /**
+     * 获取封面图
+     */
+    @RequestMapping("/ablum")
+    public MusicHQ ablum(String mid){
+        return GetUrl.getAblum(mid);
     }
     //    @RequestMapping(value = "/addList")
 //    public void addList(String listName,int id){
