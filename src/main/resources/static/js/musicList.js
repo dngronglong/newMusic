@@ -49,6 +49,7 @@ var musicList = [
         item: []
     },
     {
+        id : 4,
         name: "推荐榜",
         cover: "",          // 播放列表封面
         creatorName: "",        // 列表创建者名字

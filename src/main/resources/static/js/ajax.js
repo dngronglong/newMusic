@@ -29,6 +29,7 @@ function ajaxSearch() {
             // 调试信息输出
             if(mkPlayer.debug) {
                 console.debug("搜索结果数：" + jsonData.songList.length);
+                //console.debug("搜索结果 ："+jsonData)
             }
             
             if(rem.loadPage == 1)   // 加载第一页，清空列表
@@ -53,25 +54,48 @@ function ajaxSearch() {
             
             var tempItem = [], no = musicList[0].item.length;
             console.log(jsonData);
-            for (var i = 0; i < jsonData.songList.length; i++) {
-                no ++;
-                tempItem =  {
-                    id: jsonData.songList[i].id,  // 音乐ID
-                    name: jsonData.songList[i].musicName,  // 音乐名字
-                    artist: jsonData.songList[i].singer, // 艺术家名字
-                    album: jsonData.songList[i].album,    // 专辑名字
-                    mid: jsonData.songList[i].mid,//音乐mid
-                    // source: jsonData[i].source,     // 音乐来源
-                    // url_id: jsonData[i].url_id,  // 链接ID
-                    // pic_id: jsonData[i].pic_id,  // 封面ID
-                    // lyric_id: jsonData[i].lyric_id,  // 歌词ID
-                    pic: null,    // 专辑图片
-                    url: null   // mp3链接
-                };
-                console.log(tempItem);
-                musicList[0].item.push(tempItem);   // 保存到搜索结果临时列表中
-                addItem(no, tempItem.name, tempItem.artist, tempItem.album);  // 在前端显示
+            if (rem.source=="tencent") {
+                for (var i = 0; i < jsonData.songList.length; i++) {
+                    no ++;
+                    tempItem =  {
+                        id: jsonData.songList[i].id,  // 音乐ID
+                        name: jsonData.songList[i].musicName,  // 音乐名字
+                        artist: jsonData.songList[i].singer, // 艺术家名字
+                        album: jsonData.songList[i].album,    // 专辑名字
+                        mid: jsonData.songList[i].mid,//音乐mid
+                        // source: jsonData[i].source,     // 音乐来源
+                        // url_id: jsonData[i].url_id,  // 链接ID
+                        // pic_id: jsonData[i].pic_id,  // 封面ID
+                        // lyric_id: jsonData[i].lyric_id,  // 歌词ID
+                        pic: null,    // 专辑图片
+                        url: null   // mp3链接
+                    };
+                    console.log(tempItem);
+                    musicList[0].item.push(tempItem);   // 保存到搜索结果临时列表中
+                    addItem(no, tempItem.name, tempItem.artist, tempItem.album);  // 在前端显示
+                }
+            }else if(rem.source=="kugou"){
+                for (var i = 0; i < jsonData.songList.data.list.length; i++) {
+                    no ++;
+                    tempItem =  {
+                        id: jsonData.songList.data.list[i].id,  // 音乐ID
+                        name: jsonData.songList.data.list[i].songName,  // 音乐名字
+                        artist: jsonData.songList.data.list[i].singerName, // 艺术家名字
+                        album: jsonData.songList.data.list[i].albumName,    // 专辑名字
+                        hash: jsonData.songList.data.list[i].fileHash,//音乐mid
+                        // source: jsonData[i].source,     // 音乐来源
+                        // url_id: jsonData[i].url_id,  // 链接ID
+                        // pic_id: jsonData[i].pic_id,  // 封面ID
+                        // lyric_id: jsonData[i].lyric_id,  // 歌词ID
+                        pic: null,    // 专辑图片
+                        url: null   // mp3链接
+                    };
+                    console.log(tempItem);
+                    musicList[0].item.push(tempItem);   // 保存到搜索结果临时列表中
+                    addItem(no, tempItem.name, tempItem.artist, tempItem.album);  // 在前端显示
+                }
             }
+
             
             rem.dislist = 0;    // 当前显示的是搜索列表
             rem.loadPage ++;    // 已加载的列数+1

@@ -7,7 +7,7 @@
 // 播放器功能配置
 var mkPlayer = {
     api: "/mic/search", // api地址
-    loadcount: 20,  // 搜索结果一次加载多少条
+    loadcount: 30,  // 搜索结果一次加载多少条
     method: "POST",     // 数据传输方式(POST/GET)
     defaultlist: 3,    // 默认要显示的播放列表编号
     autoplay: false,    // 是否自动播放(true/false) *此选项在移动端可能无效

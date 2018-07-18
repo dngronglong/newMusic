@@ -4,10 +4,7 @@ package com.dong.music.utils;
 import com.arronlong.httpclientutil.HttpClientUtil;
 import com.arronlong.httpclientutil.common.HttpConfig;
 import com.arronlong.httpclientutil.exception.HttpProcessException;
-import com.dong.music.beans.Music;
-import com.dong.music.beans.MusicBean;
-import com.dong.music.beans.MusicHQ;
-import com.dong.music.beans.TopBean;
+import com.dong.music.beans.*;
 import com.google.gson.Gson;
 import net.sf.json.JSONObject;
 import org.dom4j.Document;
@@ -204,5 +201,54 @@ public class GetUrl {
         }
 
         return null;
+    }
+    /**
+     * 酷狗接口获取hash
+     */
+    public static KuGouMusicBean getJson(String words, String page, String limit) {
+        try {
+            words = URLEncoder.encode(words, "utf-8");
+        } catch (UnsupportedEncodingException e) {
+            e.printStackTrace();
+        }
+        String url = "http://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + words + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641";
+        HttpConfig httpConfig = HttpConfig.custom().url(url);
+        try {
+            String response = HttpClientUtil.send(httpConfig);
+            String js = response.replace("jQuery191034642999175022426_1489023388639", "").replace("(", "").replace(")", "");
+            js=js.replace("<em>","").replace("<\\/em>","");
+            System.out.println(js);
+            Gson gson=new Gson();
+            KuGouMusicBean kuGouMusicBean=gson.fromJson(js,KuGouMusicBean.class);
+            System.out.println(kuGouMusicBean);
+            return kuGouMusicBean;
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
+        return null;
+    }
+    /**
+     * 酷狗接口获取url
+     */
+    public static String getUrl(String hash) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String url = "http://www.kugou.com/yy/index.php?r=play/getdata&hash=" + hash;
+//        String mD = GetMD5(hash + "kgcloud");
+//        System.out.println(mD);
+//        String url="http://trackercdn.kugou.com/i/?cmd=4&hash="+ hash+ "&key="+mD+ "&pid=1&forceDown=0&vip=1";
+        StringBuilder json = new StringBuilder();
+        try {
+            URL urlObject = new URL(url);
+            URLConnection uc = urlObject.openConnection();
+            BufferedReader in = new BufferedReader(new InputStreamReader(uc.getInputStream(), "utf-8"));
+            String inputLine = null;
+            while ((inputLine = in.readLine()) != null) {
+                json.append(inputLine);
+            }
+            in.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        return json.toString();
     }
 }
