@@ -132,15 +132,20 @@ function listClick(no) {
 
         // 查找当前的播放列表中是否已经存在这首歌
         // && musicList[1].item[i].source == tmpMusic.source音乐来源
+        // for (var i = 0; i < musicList[1].item.length; i++) {
+        //     if (musicList[1].item[i].mid == tmpMusic.mid) {
+        //         tmpid = i;
+        //         playList(tmpid);    // 找到了直接播放
+        //         return true;    // 退出函数
+        //     }
+        // }
         for (var i = 0; i < musicList[1].item.length; i++) {
-            if (musicList[1].item[i].mid == tmpMusic.mid) {
+            if (musicList[1].item[i].hash == tmpMusic.hash) {
                 tmpid = i;
                 playList(tmpid);    // 找到了直接播放
                 return true;    // 退出函数
             }
         }
-
-
         // 将点击的这项追加到正在播放的条目的下方
         musicList[1].item.splice(rem.playid + 1, 0, tmpMusic);
         tmpid = rem.playid + 1;

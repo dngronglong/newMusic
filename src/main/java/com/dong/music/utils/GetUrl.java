@@ -217,10 +217,8 @@ public class GetUrl {
             String response = HttpClientUtil.send(httpConfig);
             String js = response.replace("jQuery191034642999175022426_1489023388639", "").replace("(", "").replace(")", "");
             js=js.replace("<em>","").replace("<\\/em>","");
-            System.out.println(js);
             Gson gson=new Gson();
             KuGouMusicBean kuGouMusicBean=gson.fromJson(js,KuGouMusicBean.class);
-            System.out.println(kuGouMusicBean);
             return kuGouMusicBean;
         } catch (Exception e) {
             e.printStackTrace();

@@ -6,6 +6,8 @@ import com.dong.music.beans.MusicHQ;
 import com.dong.music.utils.GetUrl;
 import org.springframework.web.bind.annotation.*;
 
+import java.io.UnsupportedEncodingException;
+import java.security.NoSuchAlgorithmException;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -18,15 +20,22 @@ public class MusicController {
     @RequestMapping(value = "/search", produces = {"application/json;charset=utf-8"})
     public Map search(@RequestParam Map<String, Object> map1) {
         Map map = new HashMap();
-        System.out.println(map1);
         if (map1.get("source").toString().equals("tencent")) {
             map.put("songList", GetUrl.getMusicList(map1.get("words").toString(), map1.get("pages").toString(), map1.get("count").toString()));
         }else if (map1.get("source").toString().equals("kugou")){
             KuGouMusicBean kkuGou=GetUrl.getJson(map1.get("words").toString(),map1.get("pages").toString(), map1.get("count").toString());
             map.put("songList",kkuGou);
-            System.out.println(map);
         }
         return map;
+    }
+    /**
+     * 酷狗获取歌曲地址
+     */
+    @RequestMapping("/kgplay")
+    public String kuGouPlay(@RequestParam Map<String,Object> map) throws UnsupportedEncodingException, NoSuchAlgorithmException {
+        String url=GetUrl.getUrl(map.get("hash").toString());
+        System.out.println(url);
+        return url;
     }
 
     /**

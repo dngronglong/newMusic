@@ -83,14 +83,9 @@ function ajaxSearch() {
                         artist: jsonData.songList.data.list[i].singerName, // 艺术家名字
                         album: jsonData.songList.data.list[i].albumName,    // 专辑名字
                         hash: jsonData.songList.data.list[i].fileHash,//音乐mid
-                        // source: jsonData[i].source,     // 音乐来源
-                        // url_id: jsonData[i].url_id,  // 链接ID
-                        // pic_id: jsonData[i].pic_id,  // 封面ID
-                        // lyric_id: jsonData[i].lyric_id,  // 歌词ID
                         pic: null,    // 专辑图片
                         url: null   // mp3链接
                     };
-                    console.log(tempItem);
                     musicList[0].item.push(tempItem);   // 保存到搜索结果临时列表中
                     addItem(no, tempItem.name, tempItem.artist, tempItem.album);  // 在前端显示
                 }
@@ -120,35 +115,25 @@ function ajaxSearch() {
 
 // 完善获取音乐信息
 // 音乐所在列表ID、音乐对应ID、回调函数
-function ajaxUrl(music, callback)
-{
-    // 已经有数据，直接回调
-    // if(music.url !== null && music.url !== "err" && music.url !== "") {
-    //     callback(music);
-    //     return true;
-    // }
-    // id为空，赋值链接错误。直接回调
-    // if(music.id === null) {
-    //     music.url = "err";
-    //     updateMinfo(music); // 更新音乐信息
-    //     callback(music);
-    //     return true;
-    // }
+function ajaxUrl(music, callback) {
     $.ajax({ 
         type: mkPlayer.method, 
-        url: "/mic/Qplay",
-        data: "mid=" + music.mid + "&musicName=" + music.musicName,
+        // url: "/mic/Qplay",  //QQ音乐接口
+        url : "/mic/kgplay",
+        data: "hash=" + music.hash,
         dataType : "json",
         success: function(jsonData){
             // 调试信息输出
             if(mkPlayer.debug) {
-                console.debug("歌曲链接：" + jsonData.mp3_l);
-            }
+                // console.debug("歌曲链接：" + jsonData.mp3_l);  //QQ音乐
+                console.debug("歌曲链接："+jsonData.data.play_url); //酷狗音乐
+             }
             
-            if(jsonData.url === "") {
+            if(jsonData.play_url === "") {
                 music.url = "err";
             } else {
-                music.url = jsonData.mp3_l;    // 记录结果
+                // music.url = jsonData.mp3_l;    // 记录结果
+                music.url = jsonData.data.play_url;    // 记录结果
             }
             
             updateMinfo(music); // 更新音乐信息
@@ -168,32 +153,36 @@ function ajaxUrl(music, callback)
 // 包含音乐信息的数组、回调函数
 function ajaxPic(music, callback)
 {
-    // 已经有数据，直接回调
-    // if(music.pic !== null && music.pic !== "err" && music.pic !== "") {
-    //     callback(music);
-    //     return true;
-    // }
-    // // pic_id 为空，赋值链接错误。直接回调
-    // if(music.pic_id === null) {
-    //     music.pic = "err";
-    //     updateMinfo(music); // 更新音乐信息
-    //     callback(music);
-    //     return true;
-    // }
+    //已经有数据，直接回调
+    if(music.pic !== null && music.pic !== "err" && music.pic !== "") {
+        callback(music);
+        return true;
+    }
+    // pic_id 为空，赋值链接错误。直接回调
+    if(music.pic_id === null) {
+        music.pic = "err";
+        updateMinfo(music); // 更新音乐信息
+        callback(music);
+        return true;
+    }
     
     $.ajax({ 
         type: mkPlayer.method, 
-        url: "/mic/ablum",
-        data: "mid="+music.mid,
+        // url: "/mic/ablum",
+        url :"/mic/kgplay",
+        // data: "mid="+music.mid,
+        data: "hash=" + music.hash,
         dataType : "json",
         success: function(jsonData){
             // 调试信息输出
             if(mkPlayer.debug) {
-                console.log("歌曲封面：" + jsonData.pic);
+                // console.log("歌曲封面：" + jsonData.pic);
+                console.log("歌曲封面：" + jsonData.data.img);
             }
             
             if(jsonData.url !== "") {
-                music.pic = jsonData.pic;    // 记录结果
+                // music.pic = jsonData.pic;    // 记录结果
+                music.pic = jsonData.data.img;    // 记录结果
             } else {
                 music.pic = "err";
             }
@@ -336,21 +325,23 @@ function ajaxPlayList(lid, id, callback){
 function ajaxLyric(music, callback) {
     lyricTip('歌词加载中...');
     
-    if(!music.lyric_id) callback('');  // 没有歌词ID，直接返回
+    // if(!music.lyric_id) callback('');  // 没有歌词ID，直接返回
     
     $.ajax({
         type: mkPlayer.method,
-        url: mkPlayer.api,
-        data: "types=lyric&id=" + music.lyric_id + "&source=" + music.source,
-        dataType : "jsonp",
+        // url: "/mic/ablum",
+        url :"/mic/kgplay",
+        // data: "mid="+music.mid,
+        data: "hash=" + music.hash,
+        dataType : "json",
         success: function(jsonData){
             // 调试信息输出
             if (mkPlayer.debug) {
                 console.debug("歌词获取成功");
             }
             
-            if (jsonData.lyric) {
-                callback(jsonData.lyric, music.lyric_id);    // 回调函数
+            if (jsonData.data.lyrics) {
+                callback(jsonData.data.lyrics, music.lyric_id);    // 回调函数
             } else {
                 callback('', music.lyric_id);    // 回调函数
             }

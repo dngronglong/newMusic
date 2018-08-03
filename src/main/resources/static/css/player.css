@@ -546,7 +546,7 @@ body {
 }
 /* 正在播放的那一句歌词 */
 #lyric .lplaying {
-    color: #31c27c;
+    color: #2d71c2;
 }
 /* 歌词显示区显示的提示语(如加载中、无歌词等) */
 .lyric-tip {
