@@ -17,7 +17,7 @@ var mkPlayer = {
     mdotshine: false,   // 是否开启[移动端]播放进度条的小点闪动效果[不支持IE](true/false)
     volume: 0.6,        // 默认音量值(0~1之间)
     version: "v2.32",    // 播放器当前版本号(仅供调试)
-    debug: true   // 是否开启调试模式(true/false)
+    debug: false   // 是否开启调试模式(true/false)
 };
 
 
@@ -113,11 +113,12 @@ function listClick(no) {
     var tmpid = no;
     // 获取选定歌曲的信息
     var tmpMusic = musicList[rem.dislist].item[no];
-    console.info(tmpMusic);
+
     // 调试信息输出
     if (mkPlayer.debug) {
         console.log("点播了列表中的第 " + (no + 1) + " 首歌 " + musicList[rem.dislist].item[no].name);
         console.log(rem.dislist);
+        console.info(tmpMusic);
         //console.info(musicList[1].item[1]);
     }
 

@@ -211,7 +211,7 @@ public class GetUrl {
         } catch (UnsupportedEncodingException e) {
             e.printStackTrace();
         }
-        String url = "http://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + words + "&page=1&pagesize=30&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641";
+        String url = "http://songsearch.kugou.com/song_search_v2?callback=jQuery191034642999175022426_1489023388639&keyword=" + words + "&page="+page+"&pagesize="+limit+"&userid=-1&clientver=&platform=WebFilter&tag=em&filter=2&iscorrection=1&privilege_filter=0&_=1489023388641";
         HttpConfig httpConfig = HttpConfig.custom().url(url);
         try {
             String response = HttpClientUtil.send(httpConfig);

@@ -15,7 +15,7 @@ function ajaxSearch() {
     if(rem.loadPage == 1) { // 弹出搜索提示
         var tmpLoading = layer.msg('搜索中', {icon: 16,shade: 0.01});
     }
-    
+    var total=0;
     $.ajax({
         type: mkPlayer.method, 
         url: mkPlayer.api, 
@@ -25,16 +25,17 @@ function ajaxSearch() {
             if(tmpLoading) layer.close(tmpLoading);    // 关闭加载中动画
         },  // complete
         success: function(jsonData){
+            total=jsonData.songList.data.total;
             
             // 调试信息输出
             if(mkPlayer.debug) {
-                console.debug("搜索结果数：" + jsonData.songList.length);
+                console.debug("搜索结果数：" + total);
                 //console.debug("搜索结果 ："+jsonData)
             }
             
             if(rem.loadPage == 1)   // 加载第一页，清空列表
             {
-                if(jsonData.length === 0)   // 返回结果为零
+                if(jsonData.songList.data.list.length === 0)   // 返回结果为零
                 {
                     layer.msg('没有找到相关歌曲', {anim:6});
                     return false;
@@ -46,14 +47,13 @@ function ajaxSearch() {
                 $("#list-foot").remove();     //已经是加载后面的页码了，删除之前的“加载更多”提示
             }
             
-            if(jsonData.length === 0)
+            if(jsonData.songList.data.list.length === 0)
             {
                 addListbar("nomore");  // 加载完了
                 return false;
             }
             
             var tempItem = [], no = musicList[0].item.length;
-            console.log(jsonData);
             if (rem.source=="tencent") {
                 for (var i = 0; i < jsonData.songList.length; i++) {
                     no ++;
@@ -63,10 +63,6 @@ function ajaxSearch() {
                         artist: jsonData.songList[i].singer, // 艺术家名字
                         album: jsonData.songList[i].album,    // 专辑名字
                         mid: jsonData.songList[i].mid,//音乐mid
-                        // source: jsonData[i].source,     // 音乐来源
-                        // url_id: jsonData[i].url_id,  // 链接ID
-                        // pic_id: jsonData[i].pic_id,  // 封面ID
-                        // lyric_id: jsonData[i].lyric_id,  // 歌词ID
                         pic: null,    // 专辑图片
                         url: null   // mp3链接
                     };
@@ -90,7 +86,10 @@ function ajaxSearch() {
                     addItem(no, tempItem.name, tempItem.artist, tempItem.album);  // 在前端显示
                 }
             }
-
+            // 调试信息输出
+            if(mkPlayer.debug) {
+                console.info("当前已加载条数："+no);
+            }
             
             rem.dislist = 0;    // 当前显示的是搜索列表
             rem.loadPage ++;    // 已加载的列数+1
@@ -98,7 +97,7 @@ function ajaxSearch() {
             dataBox("list");    // 在主界面显示出播放列表
             refreshList();  // 刷新列表，添加正在播放样式
             
-            if(no < mkPlayer.loadcount) {
+            if(no >= total) {
                 addListbar("nomore");  // 没加载满，说明已经加载完了
             } else {
                 addListbar("more");     // 还可以点击加载更多

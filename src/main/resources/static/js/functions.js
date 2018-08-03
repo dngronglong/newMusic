@@ -489,7 +489,6 @@ function loadList(list) {
         url: "/mic/" + parmeter,
         dataTpe: "json",
         success: function (data) {
-            console.log(data);
             if (parmeter == 'top')
                 for (var i = 0; i < data.top.length; i++) {
                     musicList[list].item.push({
